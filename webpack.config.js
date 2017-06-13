@@ -1,19 +1,18 @@
-var path = require('path');
-var webpack = require('webpack');
+let path = require('path');
+let webpack = require('webpack');
 
-var isProd = process.env.NODE_ENV === 'production';
- 
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var HandlebarsPlugin = require('handlebars-webpack-plugin');
+let isProd = process.env.NODE_ENV === 'production';
 
-var bootstrapEntryPoints = require('./webpack.bootstrap.config');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let HtmlWebpackPlugin = require('html-webpack-plugin');
+let HandlebarsPlugin = require('handlebars-webpack-plugin');
 
-var bootstrapConfig = isProd ? bootstrapEntryPoints.prod : bootstrapEntryPoints.dev;
-var bootstrapConfig = bootstrapEntryPoints.prod;
+let bootstrapEntryPoints = require('./webpack.bootstrap.config');
 
+// let bootstrapConfig = isProd ? bootstrapEntryPoints.prod : bootstrapEntryPoints.dev;
+let bootstrapConfig = bootstrapEntryPoints.prod;
 
-var config = {
+let config = {
   source: './app',
   destination: './dist'
 };
@@ -25,7 +24,7 @@ module.exports = {
   },
   output: {
     filename: 'js/[name].js',
-    path: path.resolve(__dirname, 'dist')  
+    path: path.resolve(__dirname, 'dist')
   },
 
   // loaders: [
@@ -59,14 +58,11 @@ module.exports = {
         loaders: ['file-loader?name=[name].[ext]&outputPath=images/'],
         // loaders: ['file-loader?name=[name].[ext]&outputPath=images/&publicPath=images/'],
       },
-      {
-        test: /\.html$/,
-        loaders: ['html-loader']
-      },
-      { test: /\.(woff2?)$/, use: 'url-loader?limit=10000&name=fonts/[name].[ext]' },
-      { test: /\.(ttf|eot)$/, use: 'file-loader?name=fonts/[name].[ext]' },
-      // Bootstrap 3
-      { test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/, use: 'imports-loader?jQuery=jquery' }
+      { test: /\.html$/, loaders: ['html-loader'] },
+      { test: /\.(woff2?)$/, loaders: ['url-loader?limit=10000&name=fonts/[name].[ext]'] },
+      { test: /\.(ttf|eot)$/, loaders: ['file-loader?name=fonts/[name].[ext]'] },
+      // Bootstrap 3w
+      { test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/, loaders: ['imports-loader?jQuery=jquery'] }
     ]
   },
 
@@ -89,38 +85,11 @@ module.exports = {
       , filename: 'assemble.html'
       , template: 'app/assemble.html'
     }),
-    // new webpack.LoaderOptionsPlugin({
-    //   // Options...
-    //   minimize: true
-    // })
-    // new HandlebarsPlugin({
-    //   // path to hbs entry file(s)
-    //   entry: path.join(process.cwd(), "src", "templates", "pages", "*.hbs"),
-    //   // output path and filename(s)
-    //   // if ommited, the input filepath stripped of its extension will be used
-    //   output: path.join(process.cwd(), "dist", "[name].html"),
-    //   // data passed to main hbs template: `main-template(data)`
-    //   data: require("./src/templates/data/project.json"),
-
-    //   // globbed path to partials, where folder/filename is unique
-    //   partials: [
-    //       path.join(process.cwd(), "src", "templates", "includes", "*", "*.hbs")
-    //   ],
-
-    //   // register custom helpers. May be either a function or a glob-pattern
-    //   // helpers: {
-    //   //     nameOfHbsHelper: Function.prototype,
-    //   //     projectHelpers: path.join(process.cwd(), "app", "helpers", "*.helper.js")
-    //   // },
-
-    //   // hooks
-    //   onBeforeSetup: function (Handlebars) {},
-    //   onBeforeAddPartials: function (Handlebars, partialsMap) {},
-    //   onBeforeCompile: function (Handlebars, templateContent) {},
-    //   onBeforeRender: function (Handlebars, data) {},
-    //   onBeforeSave: function (Handlebars, resultHtml, filename) {},
-    //   onDone: function (Handlebars, filename) {}
-    // })
+    new HtmlWebpackPlugin({
+      xhtml: true
+      , filename: 'bootstrap.html'
+      , template: 'app/bootstrap.html'
+    })
   ],
 
   cache: false,
@@ -130,4 +99,4 @@ module.exports = {
     poll: true,
     poll: 500
   }
-};
+}

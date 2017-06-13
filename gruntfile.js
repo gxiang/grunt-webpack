@@ -7,6 +7,11 @@ var config = {
 };
 
 module.exports = function(grunt) {
+  // grunt.loadNpmTasks('grunt-load-options');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-webpack');
+  grunt.loadNpmTasks('grunt-assemble');
+
   grunt.initConfig({
     webpack: {
       options: {
@@ -14,7 +19,7 @@ module.exports = function(grunt) {
       },
       prod: webpackConfig,
       dev: Object.assign({ watch: true }, webpackConfig)
-    }, 
+    },
     assemble: {
       options: {
         // assets: 'assets',
@@ -28,19 +33,31 @@ module.exports = function(grunt) {
       },
       pages: {
         files: [
-          { 
+          {
             expand: true,
             cwd: config.template + '/pages/',
             src: '**/*.hbs',
             dest: config.source,
-            ext: '.html'    
+            ext: '.html'
           }
-        ]        
+        ]
       }
     },
+    watch: {
+      assemble: {
+        files: ['./src/templates/**/*.hbs'],
+        tasks: ['assemble']
+      },
+      webpack: {
+        files: ['./app/**/*'],
+        tasks: ['webpack']
+      }
+    }
   });
 
-  // grunt.loadNpmTasks('grunt-load-options');
-  grunt.loadNpmTasks('grunt-webpack');
-  grunt.loadNpmTasks('grunt-assemble');
+  grunt.registerTask('default', [
+    'assemble',
+    'webpack',
+    'watch'
+  ]);
 };
